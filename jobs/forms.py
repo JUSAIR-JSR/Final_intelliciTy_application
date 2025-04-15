@@ -21,8 +21,44 @@ from .models import JobApplication
 class JobApplicationForm(forms.ModelForm):
     class Meta:
         model = JobApplication
-        fields = []  # No fields shown to the user
-    cv = forms.FileField()  # Add a field for uploading CV
+        fields = []  # No fields shown by default
+    
+    cv = forms.FileField(
+        label='Upload Your CV',
+        help_text='Accepted formats: PDF, DOC, DOCX (Max size: 5MB)',
+        widget=forms.FileInput(attrs={
+            'accept': '.pdf,.doc,.docx',
+            'class': 'form-control-file',
+        })
+    )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # You can add additional initialization here if needed
+    
+    def clean_cv(self):
+        cv = self.cleaned_data.get('cv')
+        
+        if not cv:
+            raise forms.ValidationError("Please upload your CV")
+        
+        # Validate file size (5MB limit)
+        max_size = 5 * 1024 * 1024  # 5MB
+        if cv.size > max_size:
+            raise forms.ValidationError(
+                f"File too large. Maximum size is {max_size//(1024*1024)}MB"
+            )
+        
+        # Validate file extension
+        valid_extensions = ['pdf', 'doc', 'docx']
+        ext = cv.name.split('.')[-1].lower()
+        if ext not in valid_extensions:
+            raise forms.ValidationError(
+                "Unsupported file format. Please upload a PDF or Word document"
+            )
+        
+        return cv
+    
 
 
 

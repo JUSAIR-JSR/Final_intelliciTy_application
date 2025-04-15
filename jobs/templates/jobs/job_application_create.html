@@ -1,16 +1,44 @@
+{% load static tailwind_tags %}
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Apply for Job</title>
+    <title>Apply for {{ job_posting.title }} | {{ organization.name }}</title>
+    {% tailwind_css %}
+
 </head>
 <body>
-    <h2>Apply for {{ job_posting.title }}</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <p><label for="cv">Upload your CV:</label>
-        {{ form.cv }}</p>
-        <button type="submit">Apply</button>
-    </form>
-    <a href="{% url 'user_dashboard' %}">Back to Dashboard</a>
+    <div class="container">
+        <h2>Apply for {{ job_posting.title }}</h2>
+        <p> {{ organization.name }}</p>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post" enctype="multipart/form-data" class="job-application-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_cv">CV Upload</label>
+                {{ form.cv }}
+                {% if form.cv.errors %}
+                    <div class="error">{{ form.cv.errors }}</div>
+                {% endif %}
+                <small class="form-text text-muted">{{ form.cv.help_text }}</small>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Submit Application</button>
+                <a href="{% url 'job_posting_detail' org_id=organization.id pk=job_posting.pk %}" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

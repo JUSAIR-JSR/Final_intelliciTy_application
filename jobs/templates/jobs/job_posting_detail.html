@@ -7,319 +7,270 @@
     <title>{{ job_posting.title }} - {{ organization.name }}</title>
     {% tailwind_css %}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .status-column {
+            min-height: 600px;
+            background: rgba(249, 250, 251, 0.7);
         }
-        @keyframes slideIn {
-            from { transform: translateX(-20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .application-card {
+            transition: all 0.2s ease;
+            border-left: 4px solid;
         }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .animate-fade {
-            animation: fadeIn 0.6s ease-out forwards;
-        }
-        .animate-slide {
-            animation: slideIn 0.5s ease-out forwards;
-        }
-        .hover-pulse:hover {
-            animation: pulse 0.5s ease-in-out;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        .status-badge {
-            transition: all 0.3s ease;
+        .application-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
         .btn-gradient {
             background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
-            transition: all 0.3s ease;
+            color: white;
         }
         .btn-gradient:hover {
             background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
         }
         .btn-danger {
             background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            transition: all 0.3s ease;
+            color: white;
         }
         .btn-danger:hover {
             background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
-        }
-        .btn-success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            transition: all 0.3s ease;
-        }
-        .btn-success:hover {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+<body class="bg-gray-50 min-h-screen">
     <div class="max-w-7xl mx-auto px-4 py-8">
         <!-- Job Posting Header -->
-        <div class="flex justify-between items-start mb-12 animate-slide">
-            <div>
-                <h1 class="text-4xl font-bold text-gray-900 mb-3">{{ job_posting.title }}</h1>
-                <div class="flex items-center text-blue-600">
-                    <i class="fas fa-building mr-2"></i>
-                    <span class="font-medium">{{ organization.name }}</span>
+        <div class="flex flex-col md:flex-row justify-between items-start mb-8 gap-4">
+            <div class="flex-1">
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">{{ job_posting.title }}</h1>
+                        <div class="flex items-center text-blue-600 mt-2">
+                            <i class="fas fa-building mr-2"></i>
+                            <span>{{ organization.name }}</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'job_posting_list' org_id=organization.id %}" 
+                       class="flex items-center text-blue-600 hover:text-blue-800 whitespace-nowrap">
+                        <i class="fas fa-arrow-left mr-2"></i> Back to Jobs
+                    </a>
                 </div>
-            </div>
-            <a href="{% url 'job_posting_list' org_id=organization.id %}" 
-               class="flex items-center text-blue-600 hover:text-blue-800 transition-all duration-300">
-                <i class="fas fa-arrow-left mr-2"></i> Back to Job Postings
-            </a>
-        </div>
-
-        <!-- Job Details Card -->
-        <div class="glass-card rounded-2xl overflow-hidden mb-12 animate-fade" style="animation-delay: 0.1s">
-            <div class="p-8">
-                <!-- Job Image -->
-                {% if job_posting.job_post_image %}
-                <div class="mb-8 rounded-xl overflow-hidden shadow-lg hover-pulse">
-                    <img src="{{ job_posting.job_post_image.url }}" alt="{{ job_posting.title }}" 
-                         class="w-full h-80 object-cover">
-                </div>
-                {% endif %}
-
-                <!-- Job Description -->
-                <div class="mb-8">
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-                        <i class="fas fa-file-alt text-blue-500 mr-3"></i> Job Description
-                    </h3>
-                    <div class="prose max-w-none text-gray-700 text-lg leading-relaxed">
+                
+                <!-- Job Details -->
+                <div class="bg-white rounded-lg shadow-md p-6 mt-4">
+                    <div class="prose max-w-none">
                         {{ job_posting.description|linebreaks }}
                     </div>
-                </div>
-
-                <!-- Job Details Grid -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    <div>
-                        <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-                            <i class="fas fa-award text-blue-500 mr-3"></i> Qualifications
-                        </h3>
-                        <div class="prose max-w-none text-gray-700 text-lg leading-relaxed">
-                            {{ job_posting.required_qualifications|linebreaks }}
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-                            <i class="fas fa-info-circle text-blue-500 mr-3"></i> Job Details
-                        </h3>
-                        <div class="space-y-4">
-                            <p class="flex items-center text-lg">
-                                <i class="fas fa-map-marker-alt text-gray-500 mr-3 w-6 text-center"></i>
-                                <span class="font-medium">Location:</span> 
-                                <span class="ml-2">{{ job_posting.location }}</span>
-                            </p>
-                            <p class="flex items-center text-lg">
-                                <i class="fas fa-calendar-alt text-gray-500 mr-3 w-6 text-center"></i>
-                                <span class="font-medium">Posted on:</span> 
-                                <span class="ml-2">{{ job_posting.posted_on|date:"M d, Y" }}</span>
-                            </p>
-                            <p class="flex items-center text-lg">
-                                <i class="fas fa-clock text-gray-500 mr-3 w-6 text-center"></i>
-                                <span class="font-medium">Application Deadline:</span> 
-                                <span class="ml-2 {% if job_posting.is_past_deadline %}text-red-500{% else %}text-green-600{% endif %}">
-                                    {{ job_posting.application_deadline|date:"M d, Y H:i" }}
-                                </span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                {% if can_manage %}
-                <div class="flex flex-wrap gap-4 pt-6 border-t border-gray-200">
-                    <a href="{% url 'job_posting_update' org_id=organization.id pk=job_posting.id %}" 
-                       class="btn-gradient px-6 py-3 text-white font-medium rounded-xl flex items-center hover-pulse">
-                        <i class="fas fa-edit mr-2"></i> Edit Job Posting
-                    </a>
-                    <form method="post" action="{% url 'job_posting_delete' org_id=organization.id pk=job_posting.id %}" 
-                          onsubmit="return confirm('Are you sure you want to delete this job posting?')">
-                        {% csrf_token %}
-                        <button type="submit" 
-                                class="btn-danger px-6 py-3 text-white font-medium rounded-xl flex items-center hover-pulse">
-                            <i class="fas fa-trash-alt mr-2"></i> Delete Job Posting
-                        </button>
-                    </form>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Applicants Section -->
-        <div class="glass-card rounded-2xl overflow-hidden animate-fade" style="animation-delay: 0.2s">
-            <div class="p-8 border-b border-gray-200">
-                <h2 class="text-3xl font-semibold text-gray-900 flex items-center">
-                    <i class="fas fa-users text-blue-500 mr-3"></i> Applicants
-                </h2>
-            </div>
-
-            {% if applications %}
-            <ul class="divide-y divide-gray-200">
-                {% for application in applications %}
-                <li class="p-8 hover:bg-gray-50/50 transition-colors duration-300">
-                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                        <!-- Applicant Info -->
-                        <div class="flex items-start space-x-6 min-w-0">
-                            <div class="flex-shrink-0">
-                                {% if application.applicant.profile.profile_image and application.applicant.profile.profile_image.url %}
-                                    <img class="h-16 w-16 rounded-full object-cover shadow-md hover-pulse" 
-                                         src="{{ application.applicant.profile.profile_image.url }}" 
-                                         alt="{{ application.applicant.username }}">
-                                {% else %}
-                                    <div class="h-16 w-16 rounded-full bg-gray-200 flex items-center justify-center shadow-md">
-                                        <i class="fas fa-user text-gray-500 text-2xl"></i>
-                                    </div>
-                                {% endif %}
+                    
+                    <!-- Job Metadata -->
+                    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h3 class="font-semibold text-lg mb-2">Qualifications</h3>
+                            <div class="prose max-w-none">
+                                {{ job_posting.required_qualifications|linebreaks }}
                             </div>
-                            <div class="min-w-0">
-                                <h3 class="text-xl font-medium text-gray-900 truncate">
-                                    <a href="{% url 'user_profile' application.applicant.username %}" 
-                                       class="hover:text-blue-600 hover:underline transition-colors">
-                                        {{ application.applicant.username }}
-                                    </a>
-                                </h3>
-                                <p class="text-gray-600 mt-1">
-                                    Applied on {{ application.applied_at|date:"M d, Y" }}
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-2">Details</h3>
+                            <div class="space-y-2">
+                                <p class="flex items-center">
+                                    <i class="fas fa-map-marker-alt text-gray-500 mr-2 w-5"></i>
+                                    {{ job_posting.location }}
+                                </p>
+                                <p class="flex items-center">
+                                    <i class="fas fa-calendar-alt text-gray-500 mr-2 w-5"></i>
+                                    Posted: {{ job_posting.posted_on|date:"M d, Y" }}
+                                </p>
+                                <p class="flex items-center">
+                                    <i class="fas fa-clock text-gray-500 mr-2 w-5"></i>
+                                    Deadline: <span class="ml-1 {% if job_posting.is_past_deadline %}text-red-500{% else %}text-green-600{% endif %}">
+                                        {{ job_posting.application_deadline|date:"M d, Y" }}
+                                    </span>
                                 </p>
                             </div>
                         </div>
-
-                        <!-- Status and Actions -->
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
-                            {% if can_manage %}
-                            <form method="post" class="flex items-center space-x-3">
-                                {% csrf_token %}
-                                <input type="hidden" name="application_id" value="{{ application.id }}">
-                                <select name="status" 
-                                        class="text-base border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
-                                    <option value="pending" {% if application.status == "pending" %}selected{% endif %}>Pending</option>
-                                    <option value="accepted" {% if application.status == "accepted" %}selected{% endif %}>Accepted</option>
-                                    <option value="rejected" {% if application.status == "rejected" %}selected{% endif %}>Rejected</option>
-                                    <option value="interview_scheduled" {% if application.status == "interview_scheduled" %}selected{% endif %}>Interview Scheduled</option>
-                                    <option value="offer_made" {% if application.status == "offer_made" %}selected{% endif %}>Offer Made</option>
-                                </select>
-                                <button type="submit" name="update_status" value="true"
-                                        class="btn-gradient px-4 py-2 text-white font-medium rounded-lg flex items-center hover-pulse">
-                                    <i class="fas fa-sync-alt mr-2"></i> Update
-                                </button>
-                            </form>
-                            {% else %}
-                            <span class="px-4 py-2 rounded-full text-sm font-medium shadow-sm status-badge
-                                {% if application.status == 'pending' %}bg-blue-100 text-blue-800
-                                {% elif application.status == 'accepted' %}bg-green-100 text-green-800
-                                {% elif application.status == 'rejected' %}bg-red-100 text-red-800
-                                {% elif application.status == 'interview_scheduled' %}bg-purple-100 text-purple-800
-                                {% else %}bg-yellow-100 text-yellow-800{% endif %}">
-                                {{ application.status|title }}
-                            </span>
-                            {% endif %}
-                        </div>
                     </div>
-
-                    <!-- Interview Section -->
-                    <div class="mt-6 pt-6 border-t border-gray-200">
-                        {% if not application.interviews.exists %}
-                            {% if can_manage %}
-                            <a href="{% url 'create_interview' org_id=organization.id job_id=job_posting.id application_id=application.id %}" 
-                               class="btn-success px-4 py-2 text-white font-medium rounded-lg inline-flex items-center hover-pulse">
-                                <i class="fas fa-calendar-plus mr-2"></i> Schedule Interview
-                            </a>
-                            {% endif %}
-                        {% else %}
-                            {% for interview in application.interviews.all %}
-                            <div class="bg-gray-50/50 rounded-xl p-6 mt-4 shadow-inner hover-pulse">
-                                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                                    <div>
-                                        <h4 class="text-lg font-medium text-gray-900 flex items-center">
-                                            <i class="fas fa-video text-blue-500 mr-2"></i>
-                                            Interview Scheduled
-                                        </h4>
-                                        <div class="mt-3 space-y-2">
-                                            <p class="flex items-center text-gray-700">
-                                                <i class="fas fa-clock text-gray-500 mr-2 w-5 text-center"></i>
-                                                {{ interview.scheduled_time|date:"M d, Y H:i" }}
-                                            </p>
-                                            <p class="flex items-center text-gray-700">
-                                                <i class="fas fa-link text-gray-500 mr-2 w-5 text-center"></i>
-                                                <a href="{{ interview.interview_link }}" target="_blank" 
-                                                   class="text-blue-600 hover:underline">
-                                                    {{ interview.interview_link|truncatechars:40 }}
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    {% if can_manage %}
-                                    <div class="flex space-x-3 mt-4 lg:mt-0">
-                                        <a href="{% url 'update_interview' org_id=organization.id job_id=job_posting.id application_id=application.id interview_id=interview.id %}" 
-                                           class="btn-gradient px-4 py-2 text-white font-medium rounded-lg inline-flex items-center hover-pulse">
-                                            <i class="fas fa-edit mr-2"></i> Update
-                                        </a>
-                                        <form method="post" onsubmit="return confirm('Are you sure you want to delete this interview?')">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="interview_id" value="{{ interview.id }}">
-                                            <button type="submit" name="delete_interview" value="true"
-                                                    class="btn-danger px-4 py-2 text-white font-medium rounded-lg inline-flex items-center hover-pulse">
-                                                <i class="fas fa-trash-alt mr-2"></i> Delete
-                                            </button>
-                                        </form>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% endfor %}
-                        {% endif %}
+                    
+                    <!-- Action Buttons -->
+                    {% if can_manage %}
+                    <div class="mt-6 pt-4 border-t border-gray-200 flex flex-wrap gap-4">
+                        <a href="{% url 'job_posting_update' org_id=organization.id pk=job_posting.id %}" 
+                           class="btn-gradient px-4 py-2 rounded-lg font-medium flex items-center">
+                            <i class="fas fa-edit mr-2"></i> Edit Job
+                        </a>
+                        <form method="post" action="{% url 'job_posting_delete' org_id=organization.id pk=job_posting.id %}" 
+                              onsubmit="return confirm('Are you sure you want to delete this job posting?')">
+                            {% csrf_token %}
+                            <button type="submit" 
+                                    class="btn-danger px-4 py-2 rounded-lg font-medium flex items-center">
+                                <i class="fas fa-trash-alt mr-2"></i> Delete Job
+                            </button>
+                        </form>
                     </div>
-                </li>
-                {% endfor %}
-            </ul>
-            {% else %}
-            <div class="p-12 text-center">
-                <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6 shadow-inner">
-                    <i class="fas fa-user-tie text-4xl text-gray-400"></i>
+                    {% endif %}
                 </div>
-                <h3 class="text-2xl font-medium text-gray-800 mb-2">No applicants yet</h3>
-                <p class="text-gray-600 text-lg">When candidates apply, they will appear here.</p>
             </div>
-            {% endif %}
+        </div>
+
+        <!-- Applicant Dashboard -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden mt-8">
+            <div class="p-6 border-b">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-semibold flex items-center">
+                        <i class="fas fa-users text-blue-500 mr-3"></i> Applicant Dashboard
+                    </h2>
+                    <span class="text-gray-600">
+                        Total Applicants: {{ applications.count }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Status Summary Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 p-6">
+                <div class="bg-blue-50 rounded-lg p-4 border border-blue-100 shadow-sm">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-blue-800 font-medium">Pending</h3>
+                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                            {{ pending.count }}
+                        </span>
+                    </div>
+                </div>
+                <div class="bg-purple-50 rounded-lg p-4 border border-purple-100 shadow-sm">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-purple-800 font-medium">Interview</h3>
+                        <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                            {{ interview_scheduled.count }}
+                        </span>
+                    </div>
+                </div>
+                <div class="bg-green-50 rounded-lg p-4 border border-green-100 shadow-sm">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-green-800 font-medium">Accepted</h3>
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                            {{ accepted.count }}
+                        </span>
+                    </div>
+                </div>
+                <div class="bg-red-50 rounded-lg p-4 border border-red-100 shadow-sm">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-red-800 font-medium">Rejected</h3>
+                        <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
+                            {{ rejected.count }}
+                        </span>
+                    </div>
+                </div>
+                <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-100 shadow-sm">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-yellow-800 font-medium">Offer Made</h3>
+                        <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
+                            {{ offer_made.count }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kanban Columns -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 p-6">
+                <!-- Pending Column -->
+                <div class="status-column bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="bg-blue-100 text-blue-800 p-3 rounded-t-lg font-medium flex justify-between items-center">
+                        <span>Pending</span>
+                        <span class="bg-blue-600 text-white px-2 py-0.5 rounded-full text-xs">
+                            {{ pending.count }}
+                        </span>
+                    </div>
+                    <div class="p-3 space-y-4">
+                        {% for application in pending %}
+                            {% include 'jobs/partials/application_card.html' %}
+                        {% empty %}
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-user-slash text-2xl mb-2"></i>
+                                <p>No pending applications</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Interview Column -->
+                <div class="status-column bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="bg-purple-100 text-purple-800 p-3 rounded-t-lg font-medium flex justify-between items-center">
+                        <span>Interview</span>
+                        <span class="bg-purple-600 text-white px-2 py-0.5 rounded-full text-xs">
+                            {{ interview_scheduled.count }}
+                        </span>
+                    </div>
+                    <div class="p-3 space-y-4">
+                        {% for application in interview_scheduled %}
+                            {% include 'jobs/partials/application_card.html' %}
+                        {% empty %}
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-calendar-times text-2xl mb-2"></i>
+                                <p>No interviews scheduled</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Accepted Column -->
+                <div class="status-column bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="bg-green-100 text-green-800 p-3 rounded-t-lg font-medium flex justify-between items-center">
+                        <span>Accepted</span>
+                        <span class="bg-green-600 text-white px-2 py-0.5 rounded-full text-xs">
+                            {{ accepted.count }}
+                        </span>
+                    </div>
+                    <div class="p-3 space-y-4">
+                        {% for application in accepted %}
+                            {% include 'jobs/partials/application_card.html' %}
+                        {% empty %}
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-user-check text-2xl mb-2"></i>
+                                <p>No accepted candidates</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Rejected Column -->
+                <div class="status-column bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="bg-red-100 text-red-800 p-3 rounded-t-lg font-medium flex justify-between items-center">
+                        <span>Rejected</span>
+                        <span class="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs">
+                            {{ rejected.count }}
+                        </span>
+                    </div>
+                    <div class="p-3 space-y-4">
+                        {% for application in rejected %}
+                            {% include 'jobs/partials/application_card.html' %}
+                        {% empty %}
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-user-times text-2xl mb-2"></i>
+                                <p>No rejected candidates</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Offer Made Column -->
+                <div class="status-column bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="bg-yellow-100 text-yellow-800 p-3 rounded-t-lg font-medium flex justify-between items-center">
+                        <span>Offer Made</span>
+                        <span class="bg-yellow-600 text-white px-2 py-0.5 rounded-full text-xs">
+                            {{ offer_made.count }}
+                        </span>
+                    </div>
+                    <div class="p-3 space-y-4">
+                        {% for application in offer_made %}
+                            {% include 'jobs/partials/application_card.html' %}
+                        {% empty %}
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-handshake text-2xl mb-2"></i>
+                                <p>No offers made</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <script>
-        // Add animation to elements when they come into view
-        document.addEventListener('DOMContentLoaded', function() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate-fade');
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('.animate-on-scroll').forEach(el => {
-                observer.observe(el);
-            });
-        });
-    </script>
 </body>
 </html>

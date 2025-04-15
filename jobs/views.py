@@ -158,6 +158,9 @@ def job_posting_delete(request, org_id, pk):
         'organization': organization
     })
 
+
+
+
 @login_required
 def job_application_create(request, org_id, pk):
     organization = get_object_or_404(Organization, id=org_id)
@@ -188,6 +191,10 @@ def job_application_create(request, org_id, pk):
         'organization': organization
     })
 
+
+
+
+
 def job_application_success(request):
     return render(request, 'jobs/job_application_success.html')
 
@@ -196,13 +203,13 @@ from django.contrib.auth.decorators import login_required
 from interviews.models import Interview
 from interviews.forms import InterviewForm
 from jobs.models import JobPosting, JobApplication
-from organizations.models import Organization
+from organizations.models import Organization, OrganizationHR
 
 @login_required
 def job_posting_detail(request, org_id, pk):
     organization = get_object_or_404(Organization, id=org_id)
     job_posting = get_object_or_404(JobPosting, pk=pk, organization=organization)
-    applications = JobApplication.objects.filter(job=job_posting)
+    applications = JobApplication.objects.filter(job=job_posting).select_related('applicant')
 
     # Check if user has permission to manage applications and interviews
     can_manage = False
@@ -218,7 +225,7 @@ def job_posting_detail(request, org_id, pk):
         if hr_role:
             can_manage = True
 
-    form = None  # Initialize the form outside the if conditions to ensure it always exists
+    form = None
 
     if can_manage:
         if request.method == 'POST':
@@ -236,30 +243,40 @@ def job_posting_detail(request, org_id, pk):
                 if form.is_valid():
                     interview = form.save(commit=False)
                     interview.job_application = job_application
-                    interview.save()  # Save the interview
-
-                    # Add a success message (optional)
+                    interview.save()
                     return redirect('job_posting_detail', org_id=org_id, pk=pk)
 
             # Handle interview update or deletion
             if 'update_interview' in request.POST:
                 interview = get_object_or_404(Interview, id=request.POST['interview_id'])
-                return redirect('update_interview', interview_id=interview.id)
+                return redirect('update_interview', org_id=org_id, job_id=pk, application_id=interview.job_application.id, interview_id=interview.id)
             elif 'delete_interview' in request.POST:
                 interview = get_object_or_404(Interview, id=request.POST['interview_id'])
                 interview.delete()
                 return redirect('job_posting_detail', org_id=org_id, pk=pk)
 
         else:
-            form = InterviewForm()  # If GET request, initialize form here
+            form = InterviewForm()
 
-    return render(request, 'jobs/job_posting_detail.html', {
+    # Create filtered querysets for each status
+    status_querysets = {
+        'pending': applications.filter(status='pending'),
+        'interview_scheduled': applications.filter(status='interview_scheduled'),
+        'accepted': applications.filter(status='accepted'),
+        'rejected': applications.filter(status='rejected'),
+        'offer_made': applications.filter(status='offer_made'),
+    }
+
+    context = {
         'job_posting': job_posting,
-        'applications': applications,
         'organization': organization,
         'can_manage': can_manage,
-        'form': form if can_manage else None
-    })
+        'form': form if can_manage else None,
+        'applications': applications,  # All applications (if needed)
+        **status_querysets,  # Unpack all filtered querysets into context
+    }
+
+    return render(request, 'jobs/job_posting_detail.html', context)
 
 
 

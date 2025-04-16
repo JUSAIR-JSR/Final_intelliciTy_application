@@ -50,14 +50,14 @@
                     </button>
                 </form>
                 
-                {% if application.status != 'interview_scheduled' and can_manage %}
-                <div class="mt-2">
-                    <a href="{% url 'create_interview' org_id=organization.id job_id=job_posting.id application_id=application.id %}" 
-                       class="text-xs text-purple-600 hover:underline">
-                        <i class="fas fa-calendar-plus mr-1"></i> Schedule Interview
-                    </a>
-                </div>
-                {% endif %}
+                {% if application.status != 'pending' and application.status != 'rejected' and can_manage %}
+<div class="mt-2">
+    <a href="{% url 'create_interview' org_id=organization.id job_id=job_posting.id application_id=application.id %}" 
+       class="text-xs text-purple-600 hover:underline">
+        <i class="fas fa-calendar-plus mr-1"></i> Schedule Interview
+    </a>
+</div>
+{% endif %}
             </div>
             {% endif %}
             
@@ -94,3 +94,52 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle status change forms
+        document.querySelectorAll('form[name="update_status"]').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const applicationId = formData.get('application_id');
+                const status = formData.get('status');
+                
+                fetch(this.action || window.location.href, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Update the UI without refresh
+                        const statusBadge = document.querySelector(`#status-badge-${applicationId}`);
+                        if (statusBadge) {
+                            statusBadge.textContent = status;
+                            // Update border color based on status
+                            const card = document.querySelector(`#application-card-${applicationId}`);
+                            card.className = card.className.replace(/(border-\w+-500)/g, '');
+                            card.classList.add(`border-${this.getStatusColor(status)}-500`);
+                        }
+                    } else {
+                        alert('Error updating status');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+        
+        function getStatusColor(status) {
+            switch(status) {
+                case 'pending': return 'blue';
+                case 'interview_scheduled': return 'purple';
+                case 'accepted': return 'green';
+                case 'rejected': return 'red';
+                default: return 'yellow';
+            }
+        }
+    });
+    </script>

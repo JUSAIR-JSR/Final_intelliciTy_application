@@ -1595,10 +1595,6 @@ select {
   margin-left: 2.5rem;
 }
 
-.ml-12 {
-  margin-left: 3rem;
-}
-
 .ml-2 {
   margin-left: 0.5rem;
 }
@@ -1769,6 +1765,10 @@ select {
   height: 0.75rem;
 }
 
+.h-32 {
+  height: 8rem;
+}
+
 .h-36 {
   height: 9rem;
 }
@@ -1827,10 +1827,6 @@ select {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-32 {
-  height: 8rem;
 }
 
 .max-h-40 {
@@ -2095,10 +2091,6 @@ select {
 
 .items-center {
   align-items: center;
-}
-
-.justify-start {
-  justify-content: flex-start;
 }
 
 .justify-end {
@@ -2405,6 +2397,11 @@ select {
   border-color: rgb(254 226 226 / var(--tw-border-opacity, 1));
 }
 
+.border-red-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(254 202 202 / var(--tw-border-opacity, 1));
+}
+
 .border-red-400 {
   --tw-border-opacity: 1;
   border-color: rgb(248 113 113 / var(--tw-border-opacity, 1));
@@ -2441,21 +2438,6 @@ select {
 .border-yellow-500 {
   --tw-border-opacity: 1;
   border-color: rgb(234 179 8 / var(--tw-border-opacity, 1));
-}
-
-.border-red-200 {
-  --tw-border-opacity: 1;
-  border-color: rgb(254 202 202 / var(--tw-border-opacity, 1));
-}
-
-.border-red-50 {
-  --tw-border-opacity: 1;
-  border-color: rgb(254 242 242 / var(--tw-border-opacity, 1));
-}
-
-.border-red-300 {
-  --tw-border-opacity: 1;
-  border-color: rgb(252 165 165 / var(--tw-border-opacity, 1));
 }
 
 .bg-amber-100 {
@@ -2996,11 +2978,6 @@ select {
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
-}
-
-.py-0 {
-  padding-top: 0px;
-  padding-bottom: 0px;
 }
 
 .pb-24 {
@@ -3693,54 +3670,6 @@ select {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
-.\[type\:\"\"\] {
-  type: "";
-}
-
-.\[type\:\"c\"\] {
-  type: "c";
-}
-
-.\[type\:\"ch\"\] {
-  type: "ch";
-}
-
-.\[type\:\"che\"\] {
-  type: "che";
-}
-
-.\[type\:\"chec\"\] {
-  type: "chec";
-}
-
-.\[type\:\"check\"\] {
-  type: "check";
-}
-
-.\[type\:\"check-\"\] {
-  type: "check-";
-}
-
-.\[type\:\"check-b\"\] {
-  type: "check-b";
-}
-
-.\[type\:\"check-bo\"\] {
-  type: "check-bo";
-}
-
-.\[type\:\"check-box\"\] {
-  type: "check-box";
-}
-
-.\[type\:\"checkbox\"\] {
-  type: "checkbox";
-}
-
-.\[type\:checkbox\] {
-  type: checkbox;
-}
-
 .last\:border-0:last-child {
   border-width: 0px;
 }
@@ -4277,6 +4206,11 @@ select {
     padding-top: 6rem;
   }
 
+  .sm\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
   .sm\:text-4xl {
     font-size: 2.25rem;
     line-height: 2.5rem;
@@ -4285,11 +4219,6 @@ select {
   .sm\:text-5xl {
     font-size: 3rem;
     line-height: 1;
-  }
-
-  .sm\:text-3xl {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
   }
 }
 

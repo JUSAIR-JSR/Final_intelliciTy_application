@@ -351,6 +351,7 @@ def job_application_detail(request, pk):
 
 
 
+# views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from interviews.models import Interview
@@ -382,23 +383,24 @@ def manage_interview(request, org_id, job_id, application_id, interview_id=None)
         return redirect('job_posting_detail', org_id=org_id, pk=job_id)
 
     if interview_id:  # Update an existing interview
-        interview = get_object_or_404(Interview, id=interview_id)
+        interview = get_object_or_404(Interview, id=interview_id, job_application=job_application)
         form = InterviewForm(request.POST or None, instance=interview)
     else:  # Create a new interview
-        form = InterviewForm(request.POST or None)
+        form = InterviewForm(request.POST or None, initial={'job_application': job_application})
 
     if request.method == 'POST' and form.is_valid():
         interview = form.save(commit=False)
-        interview.job_application = job_application
+        interview.job_application = job_application  # Ensure the application is set
         interview.save()
         return redirect('job_posting_detail', org_id=org_id, pk=job_id)
 
     return render(request, 'jobs/manage_interview.html', {
+        'organization': organization,
         'job_posting': job_posting,
         'job_application': job_application,
         'form': form,
-        'interview': interview if interview_id else None
+        'interview': interview if interview_id else None,
+        'applicant': job_application.applicant
     })
-
 
 

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 
-from organizations.models import OrganizationHR
+from organizations.models import Organization, OrganizationHR
 from .forms import ProfileImageForm, BannerImageForm, PersonalDetailsForm,SkillForm
 from .models import Profile, Skill
 from jobs.models import JobPosting  # Import JobPosting model
@@ -32,14 +32,28 @@ def user_register(request):
     return render(request, 'users/register.html', {'form': form})
 
 
+from django.contrib import messages
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
+        
         if user is not None:
-            login(request, user)
-            return redirect('user_dashboard')
+            # Check if this user is NOT an organization
+            try:
+                # If Organization exists for this user, reject login
+                Organization.objects.get(user=user)
+                messages.error(request, "Organizations must login through the organization portal")
+                return render(request, 'users/login.html')
+            except Organization.DoesNotExist:
+                # Regular user - allow login
+                login(request, user)
+                return redirect('user_dashboard')
+        else:
+            messages.error(request, "Invalid username or password")
+    
     return render(request, 'users/login.html')
 
 

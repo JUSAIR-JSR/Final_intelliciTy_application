@@ -58,6 +58,17 @@
 
             <!-- Login Form -->
             <form class="mt-8 space-y-6" method="POST">
+                <!-- Messages -->
+{% if messages %}
+<div class="mt-4 space-y-2">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 flex items-center">
+        <i class="fas fa-exclamation-circle mr-2"></i>
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
                 {% csrf_token %}
                 <div class="rounded-md space-y-5">
                     <!-- Organization Name Field -->

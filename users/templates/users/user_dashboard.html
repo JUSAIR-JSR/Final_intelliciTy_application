@@ -330,9 +330,7 @@
                     <i class="fas fa-bullhorn text-blue-500 mr-3"></i>
                     Available Job Postings
                 </h2>
-                <a href="{% url 'joblist_userdashboard' %}" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
-                    View all <i class="fas fa-chevron-right ml-1"></i>
-                </a>            </div>
+                       </div>
             
             {% if job_postings %}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -376,7 +374,7 @@
                         <div class="flex flex-wrap gap-2">
                             {% if job.id in applied_jobs %}
                                 {% with status=applied_jobs|dictkey:job.id %}
-                                <span class="{% if status == 'PENDING' %}bg-yellow-100 text-yellow-800{% elif status == 'ACCEPTED' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %} text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center">
+                                <span class="{% if status == 'PENDING' %}bg-yellow-100 text-yellow-800{% elif status == 'ACCEPTED' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %} text-xs font-medium px-2.5 py-2 rounded-full flex items-center">
                                     {% if status == 'PENDING' %}
                                         <i class="fas fa-clock mr-1"></i>
                                     {% elif status == 'ACCEPTED' %}

@@ -72,16 +72,21 @@ def chat_room(request, username):
     # Handle POST requests to send, edit, or delete messages
     if request.method == 'POST':
         action = request.POST.get('action')
-        message_text = request.POST.get('message')
+        message_text = request.POST.get('message', '').strip()
         message_id = request.POST.get('message_id')
 
-        if action == 'send':
-            Message.objects.create(conversation=conversation, sender=request.user, text=message_text, timestamp=timezone.now())
-        elif action == 'edit':
+        if action == 'send' and message_text:
+            Message.objects.create(
+                conversation=conversation, 
+                sender=request.user, 
+                text=message_text, 
+                timestamp=timezone.now()
+            )
+        elif action == 'edit' and message_id and message_text:
             message = get_object_or_404(Message, id=message_id, sender=request.user)
             message.text = message_text
             message.save()
-        elif action == 'delete':
+        elif action == 'delete' and message_id:
             message = get_object_or_404(Message, id=message_id, sender=request.user)
             message.delete()
 
@@ -93,6 +98,9 @@ def chat_room(request, username):
     # Retrieve all messages for the conversation
     messages = conversation.messages.all().order_by('timestamp')
 
-    return render(request, 'chat/chat_room.html', {'conversation': conversation, 'messages': messages, 'other_participant': participant2})
-
+    return render(request, 'chat/chat_room.html', {
+        'conversation': conversation,
+        'messages': messages,
+        'other_participant': participant2
+    })
 

@@ -34,11 +34,6 @@ def organization_register(request):
 
 @login_required
 def organization_dashboard(request, org_id=None):
-    """
-    Organization dashboard view that handles both:
-    - Main dashboard (no org_id)
-    - Specific organization dashboard (with org_id)
-    """
     # Initialize variables
     organization = None
     hr_role = None
@@ -77,7 +72,17 @@ def organization_dashboard(request, org_id=None):
                 
             organization = hr_role.organization
 
-    # Set permissions
+    # Check if organization is verified
+    if not organization.is_verified:
+        # Only show minimal information if not verified
+        context = {
+            'organization': organization,
+            'is_owner': is_owner,
+            'is_verified': False,
+        }
+        return render(request, 'organizations/unverified_organization.html', context)
+
+    # Set permissions (only for verified organizations)
     hr_permissions = {
         'can_post_jobs': is_owner or (hr_role and hr_role.can_post_jobs),
         'can_manage_applications': is_owner or (hr_role and hr_role.can_manage_applications),
@@ -98,6 +103,7 @@ def organization_dashboard(request, org_id=None):
         'is_owner': is_owner,
         'hr_permissions': hr_permissions,
         'hr_role': hr_role,
+        'is_verified': True,  # Add verification status to context
     }
 
     # Add HR staff list if owner
@@ -194,16 +200,26 @@ def manage_hr_staff(request, hr_id=None):
 
 
 
+from django.contrib import messages
+
 def organization_login(request):
     if request.method == 'POST':
         organization_name = request.POST['organization_name']
         password = request.POST['password']
         user = authenticate(request, username=organization_name, password=password)
+        
         if user is not None:
-            login(request, user)
-            return redirect('organization_dashboard')
+            # Check if this user is actually an organization
+            try:
+                organization = Organization.objects.get(user=user)
+                login(request, user)
+                return redirect('organization_dashboard')
+            except Organization.DoesNotExist:
+                messages.error(request, "You are not registered as an organization. Please use the appropriate login page.")
+        else:
+            messages.error(request, "Invalid organization name or password.")
+    
     return render(request, 'organizations/login.html')
-
 
 
 def organization_logout(request):

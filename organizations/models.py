@@ -11,9 +11,10 @@ class Organization(models.Model):
     registration_number = models.CharField(max_length=100)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     banner_image = models.ImageField(upload_to='banner_images/', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)  # ✅ Keep only auto_now_add
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    is_verified = models.BooleanField(default=False)  # New verification field
+    
     def __str__(self):
         return self.name
 

@@ -28,7 +28,36 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 0.5rem;
+            
         }
+input[type=checkbox] {
+    appearance: none;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 9999px; /* Fully rounded */
+    border: 2px solid #3b82f6; /* Tailwind blue-500 */
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease-in-out;
+}
+
+input[type=checkbox]:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+input[type=checkbox]:checked::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 6px;
+    height: 6px;
+    background-color: white;
+    border-radius: 50%;
+}
+
         .checkbox-item {
             display: flex;
             align-items: center;

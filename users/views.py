@@ -75,7 +75,12 @@ def user_dashboard(request):
     
     # Add this line to get HR organizations
     hr_organizations = OrganizationHR.objects.filter(user=request.user, is_active=True)
-    
+
+    if request.method=="GET":
+        searchresults=request.GET.get('SearchResult')
+        if searchresults!=None:
+                job_postings=JobPosting.objects.filter(title__icontains=searchresults).order_by('-posted_on')
+
     return render(request, 'users/user_dashboard.html', {
         'job_postings': job_postings,
         'applied_jobs': applied_jobs,
@@ -84,6 +89,7 @@ def user_dashboard(request):
         'hr_organizations': hr_organizations,  # Add this line
         'applications_count': user_applications.count(),
         'interviews_count': interviews.count(),
+
     })
 
 def user_logout(request):

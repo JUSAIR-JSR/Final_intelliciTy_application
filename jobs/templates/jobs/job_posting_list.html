@@ -50,7 +50,7 @@
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <div class="flex justify-between items-center mb-8">
             <h2 class="text-3xl font-bold text-gray-800">Job Postings</h2>
-            <a href="{% url 'organization_dashboard' %}" class="back-btn flex items-center text-indigo-600 hover:text-indigo-800 font-medium transition">
+            <a href="{% url 'organization_dashboard' org_id=organization.id %}" class="back-btn flex items-center text-indigo-600 hover:text-indigo-800 font-medium transition">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Dashboard
             </a>  

@@ -7,7 +7,7 @@ urlpatterns = [
     path('logout/', views.organization_logout, name='organization_logout'),
     path('dashboard/', views.organization_dashboard, name='organization_dashboard'),
     path('dashboard/<int:org_id>/', views.organization_dashboard, name='organization_dashboard_specific'),
-
+    
     # HR Management
     path('hr/add/', views.add_hr_staff, name='add_hr_staff'),
     path('hr/manage/', views.manage_hr_staff, name='manage_hr_staff'),

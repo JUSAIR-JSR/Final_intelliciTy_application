@@ -42,7 +42,9 @@ class JobApplication(models.Model):
         ('rejected', 'Rejected'),
         ('interview_scheduled', 'Interview Scheduled'),
         ('offer_made', 'Offer Made'),
-    ])
+    ],
+     default='pending'
+    )
     cv = models.FileField(upload_to='cvs/', blank=True, null=True)
 
 

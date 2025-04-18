@@ -209,9 +209,11 @@ from organizations.models import Organization, OrganizationHR
 def job_posting_detail(request, org_id, pk):
     organization = get_object_or_404(Organization, id=org_id)
     job_posting = get_object_or_404(JobPosting, pk=pk, organization=organization)
-    applications = JobApplication.objects.filter(job=job_posting).select_related('applicant')
-
-    # Check if user has permission to manage applications and interviews
+    
+    # Get all applications for this job posting
+    applications = JobApplication.objects.filter(job=job_posting).select_related('applicant', 'applicant__profile')
+    
+    # Check permissions
     can_manage = False
     if request.user == organization.user:
         can_manage = True
@@ -226,7 +228,6 @@ def job_posting_detail(request, org_id, pk):
             can_manage = True
 
     form = None
-
     if can_manage:
         if request.method == 'POST':
             # Handle status update
@@ -235,28 +236,7 @@ def job_posting_detail(request, org_id, pk):
                 application.status = request.POST.get('status')
                 application.save()
                 return redirect('job_posting_detail', org_id=org_id, pk=pk)
-
-            # Handle creating or updating an interview
-            if 'create_interview' in request.POST:
-                job_application = get_object_or_404(JobApplication, id=request.POST.get('application_id'))
-                form = InterviewForm(request.POST)
-                if form.is_valid():
-                    interview = form.save(commit=False)
-                    interview.job_application = job_application
-                    interview.save()
-                    return redirect('job_posting_detail', org_id=org_id, pk=pk)
-
-            # Handle interview update or deletion
-            if 'update_interview' in request.POST:
-                interview = get_object_or_404(Interview, id=request.POST['interview_id'])
-                return redirect('update_interview', org_id=org_id, job_id=pk, application_id=interview.job_application.id, interview_id=interview.id)
-            elif 'delete_interview' in request.POST:
-                interview = get_object_or_404(Interview, id=request.POST['interview_id'])
-                interview.delete()
-                return redirect('job_posting_detail', org_id=org_id, pk=pk)
-
-        else:
-            form = InterviewForm()
+            # ... rest of your POST handling code ...
 
     # Create filtered querysets for each status
     status_querysets = {
@@ -272,7 +252,7 @@ def job_posting_detail(request, org_id, pk):
         'organization': organization,
         'can_manage': can_manage,
         'form': form if can_manage else None,
-        'applications': applications,  # All applications (if needed)
+        'applications': applications,  # Pass all applications
         **status_querysets,  # Unpack all filtered querysets into context
     }
 

@@ -18,6 +18,10 @@ class JobPostingForm(forms.ModelForm):
 from django import forms
 from .models import JobApplication
 
+
+from django import forms
+from .models import JobApplication
+
 class JobApplicationForm(forms.ModelForm):
     class Meta:
         model = JobApplication
@@ -58,7 +62,6 @@ class JobApplicationForm(forms.ModelForm):
             )
         
         return cv
-    
 
 
 

@@ -90,8 +90,12 @@ WSGI_APPLICATION = 'intellicity.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'intellicity_college_project',
+        'USER': 'postgres',
+        'PASSWORD': 'jusair',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 

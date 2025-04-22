@@ -50,6 +50,12 @@
             transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
             transition-duration: 300ms;
         }
+        .input_border{
+            border-radius: 10px 0px 0px 10px;
+        }
+        .search_btn_border{
+            border-radius: 0px 10px 10px 0px;
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen" x-data="{ openMobileMenu: false }">
@@ -340,19 +346,19 @@
 
 <!-- search card -->
 
-<div class="flex justify-center ">
-    <form method="get" class="w-full max-w-md px-4">
-      <div class="flex rounded-md shadow-sm">
+<div class="flex justify-center">
+    <form method="get" class="w-full max-w-xl px-4">
+      <div class="flex rounded-md  ">
         <input
           type="text"
           name="SearchResult"
-          placeholder="Search..."
+          placeholder="Search your jobs...."
           aria-label="Search"
-          class="block w-full rounded-md  border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 p-2 sm:text-sm"
+          class="block w-full input_border  shadow-xl shadow-blue-200  border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 sm:text-md"
         />
         <button
           type="submit"
-          class="inline-flex items-center rounded-md border border-transparent  bg-gradient-to-r from-indigo-700 to-purple-700   px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          class="inline-flex items-center shadow-xl shadow-blue-200 search_btn_border border border-transparent  bg-blue-600   px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
           Search
         </button>
@@ -383,7 +389,7 @@
                 {% for job in job_postings %}
                 <div class="bg-white rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg card-hover">
                     {% if job.job_post_image %}
-                    <div class="h-48 overflow-hidden">
+                    <div class="h-60 overflow-hidden">
                         <img class="w-full h-full object-cover" src="{{ job.job_post_image.url }}" alt="{{ job.title }}">
                     </div>
                     {% endif %}

@@ -1,26 +1,32 @@
-{% load static %}
+{% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Job Posting - {{ organization.name }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    {% tailwind_css %}
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         input,textarea{
             border: 2px solid #bcbbff;
             border-radius: 1rem;
             width: 100%;
-            font-size:2rem;
+            /* font-size:2rem; */
             padding: 2rem;
             outline: none;
+        }
+        input[type=text]{
+            border-radius: 1rem;
+            border: 2px solid #bcbbff;
+
         }
         input{
             height: 3rem;
         }
         textarea{
             height: 10rem;
+
           
           
         }

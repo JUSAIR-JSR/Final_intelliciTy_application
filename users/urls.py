@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import user_register, user_login, user_dashboard, user_logout, profile_view, profile_image_update, banner_image_update, personal_details_update, skills_select, skills_add, user_profile
+from .views import user_register, user_login, user_dashboard, user_logout, profile_view, profile_image_update, banner_image_update, personal_details_update, skills_select, skills_add, user_profile,update_username_password
 
 urlpatterns = [
     path('register/', user_register, name='user_register'),
@@ -13,4 +13,6 @@ urlpatterns = [
     path('skills/select/', skills_select, name='skills_select'),  # Updated URL for selecting skills
     path('skills/add/', skills_add, name='skills_add'),  # Updated URL for adding new skills
     path('profile/<str:username>/', user_profile, name='user_profile'),
+    path('update-username-password/', update_username_password, name='update_username_password'),  # New view for username and password update
+
 ]

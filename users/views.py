@@ -196,5 +196,46 @@ def user_profile(request, username):
 
 
 
-# views.py
+# users/views.py
+
+from django.contrib.auth import update_session_auth_hash
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from .forms import UsernamePasswordUpdateForm
+
+@login_required
+def update_username_password(request):
+    if request.method == 'POST':
+        form = UsernamePasswordUpdateForm(request.POST)
+        
+        if form.is_valid():
+            user = request.user
+            new_username = form.cleaned_data.get('new_username')
+            new_password = form.cleaned_data.get('new_password')
+            confirm_password = form.cleaned_data.get('confirm_password')
+
+            # If a new username is provided, check if it already exists
+            if new_username:
+                if User.objects.filter(username=new_username).exists():
+                    return render(request, 'users/update_username_password.html', {'form': form, 'error': 'Username already exists.'})
+
+                # Update username
+                user.username = new_username
+
+            # If a new password is provided, make sure it matches the confirmation and update
+            if new_password and confirm_password:
+                user.set_password(new_password)  # Hash the password
+                update_session_auth_hash(request, user)  # Keep the user logged in after password change
+
+            user.save()
+
+            # Redirect or show a success message
+            return redirect('user_dashboard')  # Or any page you prefer
+
+    else:
+        form = UsernamePasswordUpdateForm()
+
+    return render(request, 'users/update_username_password.html', {'form': form})
+
 

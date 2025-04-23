@@ -21,13 +21,24 @@ from .models import Organization, OrganizationHR
 from jobs.models import JobPosting, JobApplication
 from interviews.models import Interview
 
+from django.contrib.auth.models import User
+from django.db import IntegrityError
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.db import IntegrityError
+from .forms import OrganizationRegisterForm
+
 def organization_register(request):
     if request.method == 'POST':
         form = OrganizationRegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('organization_dashboard')
+            try:
+                user = form.save()
+                login(request, user)
+                return redirect('organization_dashboard')
+            except IntegrityError:
+                form.add_error(None, 'An unexpected error occurred. Please try again.')
     else:
         form = OrganizationRegisterForm()
     return render(request, 'organizations/register.html', {'form': form})

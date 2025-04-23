@@ -3,18 +3,34 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Organization, OrganizationHR
 
+
+from django.core.exceptions import ValidationError
+
 class OrganizationRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
     organization_name = forms.CharField(max_length=255, required=True)
-    registration_number = forms.CharField(max_length=100)
+    registration_number = forms.CharField(max_length=100, required=True)
 
     class Meta:
         model = User
         fields = ['email', 'password1', 'password2']
 
+    def clean_organization_name(self):
+        org_name = self.cleaned_data['organization_name']
+        if User.objects.filter(username=org_name).exists():
+            raise ValidationError("This organization name is already taken.")
+        return org_name
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("This email is already registered.")
+        return email
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.username = self.cleaned_data['organization_name']
+        user.email = self.cleaned_data['email']
         if commit:
             user.save()
             Organization.objects.create(
@@ -23,6 +39,7 @@ class OrganizationRegisterForm(UserCreationForm):
                 registration_number=self.cleaned_data['registration_number']
             )
         return user
+
 
 from django import forms
 from django.contrib.auth import get_user_model

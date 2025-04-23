@@ -190,11 +190,14 @@
                             <h3 class="text-xl font-semibold text-gray-800">Quick Actions</h3>
                         </div>
                         <div class="flex flex-wrap gap-4 pl-16">
-                            <a href="{% url 'skills_select' %}" class="flex items-center justify-center w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-100 transition-all hover:-translate-y-1" title="Edit Skills">
+                            <a href="{% url 'skills_select' %}" class="flex items-center justify-center w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-100 transition-all hover:-translate-y-1" title="Update Skills">
                                 <i class="fas fa-tools text-lg"></i>
                             </a>
-                            <a href="{% url 'personal_details_update' %}" class="flex items-center justify-center w-12 h-12 bg-amber-50 text-amber-600 rounded-xl hover:bg-amber-100 transition-all hover:-translate-y-1" title="Edit Details">
+                            <a href="{% url 'personal_details_update' %}" class="flex items-center justify-center w-12 h-12 bg-amber-50 text-amber-600 rounded-xl hover:bg-amber-100 transition-all hover:-translate-y-1" title="Update Details">
                                 <i class="fas fa-user-edit text-lg"></i>
+                            </a>
+                            <a href="{% url 'update_username_password' %}" class="flex items-center justify-center w-12 h-12 bg-amber-50 text-sky-600 rounded-xl hover:bg-amber-100 transition-all hover:-translate-y-1" title="Update Username Password">
+                                <i class="fas fa-key text-lg"></i>
                             </a>
                             <a href="{% url 'user_dashboard' %}" class="flex items-center justify-center w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-100 transition-all hover:-translate-y-1" title="Dashboard">
                                 <i class="fas fa-home text-lg"></i>

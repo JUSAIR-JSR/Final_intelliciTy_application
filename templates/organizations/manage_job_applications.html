@@ -75,9 +75,10 @@
                             <!-- Applicant Info -->
                             <div class="lg:col-span-3">
                                 <h4 class="font-bold text-gray-900 flex items-center">
-                                    <a href="{% url 'user_profile' application.applicant.username %}" class="hover:text-blue-600 hover:underline">
+                                    <!-- <a href="{% url 'user_profile' application.applicant.username %}" class="hover:text-blue-600 hover:underline">
                                         {{ application.applicant.username }}
-                                    </a>
+                                    </a> -->
+                                    {{ application.applicant.username }}
                                     <span class="ml-2 px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded-full flex items-center">
                                         <i class="ph ph-check-circle mr-1"></i> Verified
                                     </span>
@@ -137,7 +138,7 @@
                                         </span>
                                     </div>
                                     
-                                    {% if is_owner or request.user == application.job.user %}
+                                    <!-- {% if is_owner or request.user == application.job.user %}
                                     <form method="post" action="{% url 'manage_job_applications' org_id=organization.id %}" 
                                           class="flex items-center space-x-2">
                                         {% csrf_token %}
@@ -159,7 +160,7 @@
                                             <span>Update</span>
                                         </button>
                                     </form>
-                                    {% endif %}
+                                    {% endif %} -->
                                 </div>
                                 
                                 <div class="flex justify-end mt-3 space-x-2">
@@ -192,31 +193,44 @@
                 {% endif %}
             </div>
             
-            <!-- Pagination
-            {% if job_applications %}
-            <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between bg-gray-50/50">
-                <div class="text-sm text-gray-500">
-                    Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">24</span> applications
-                </div>
-                <div class="flex space-x-2">
-                    <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium flex items-center bg-white hover:bg-gray-50">
-                        <i class="ph ph-caret-left mr-1"></i> Previous
-                    </button>
-                    <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium bg-blue-600 text-white">
-                        1
-                    </button>
-                    <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium bg-white hover:bg-gray-50">
-                        2
-                    </button>
-                    <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium bg-white hover:bg-gray-50">
-                        3
-                    </button>
-                    <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium flex items-center bg-white hover:bg-gray-50">
-                        Next <i class="ph ph-caret-right ml-1"></i>
-                    </button>
-                </div>
-            </div>
-            {% endif %} -->
+           <!-- Pagination -->
+
+<!-- {% if page_obj.has_other_pages %}
+<div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between bg-gray-50/50">
+    <div class="text-sm text-gray-500">
+        Showing <span class="font-medium">{{ page_obj.start_index }}</span> to <span class="font-medium">{{ page_obj.end_index }}</span> of <span class="font-medium">{{ page_obj.paginator.count }}</span> applications
+    </div>
+    <div class="flex space-x-2">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium flex items-center bg-white hover:bg-gray-50">
+                <i class="ph ph-caret-left mr-1"></i> First
+            </a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium flex items-center bg-white hover:bg-gray-50">
+                <i class="ph ph-caret-left mr-1"></i> Previous
+            </a>
+        {% endif %} -->
+
+        <!-- Page numbers -->
+        <!-- {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <span class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium bg-blue-600 text-white">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium bg-white hover:bg-gray-50">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium flex items-center bg-white hover:bg-gray-50">
+                Next <i class="ph ph-caret-right ml-1"></i>
+            </a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium flex items-center bg-white hover:bg-gray-50">
+                Last <i class="ph ph-caret-right ml-1"></i>
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endif %} -->
+
         </div>
     </main>
 

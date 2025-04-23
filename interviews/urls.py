@@ -4,7 +4,6 @@ from .views import interview_list, create_interview, update_interview, delete_in
 urlpatterns = [
     path('interviews/<int:org_id>/', interview_list, name='interview_list'),
     path('my-interviews/', view_my_interviews, name='view_my_interviews'),
-    path('my-interviews/', view_my_interviews, name='view_my_interviews'),
 
 
 

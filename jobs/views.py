@@ -31,7 +31,7 @@ def job_posting_list(request, org_id=None):
         except Organization.DoesNotExist:
             return redirect('index_dashboard')
 
-    job_postings = JobPosting.objects.filter(organization=organization)
+    job_postings = JobPosting.objects.filter(organization=organization).order_by('-posted_on')
     return render(request, 'jobs/job_posting_list.html', {
         'job_postings': job_postings,
         'organization': organization
@@ -298,13 +298,13 @@ def job_posting_org_view(request, org_id=None):
 
     # If the user is the owner, they can see all job postings from the organization
     if is_owner:
-        job_postings = JobPosting.objects.filter(organization=current_org).select_related('posted_by')
+        job_postings = JobPosting.objects.filter(organization=current_org).select_related('posted_by').order_by('-posted_on')
     else:
         # If the user is HR, show only jobs posted by them
         job_postings = JobPosting.objects.filter(
             organization=current_org,
             posted_by=request.user
-        ).select_related('posted_by')
+        ).select_related('posted_by').order_by('-posted_on')
 
     # Get all organizations this HR user has access to (for switcher)
     hr_organizations = OrganizationHR.objects.filter(
@@ -372,6 +372,10 @@ def manage_interview(request, org_id, job_id, application_id, interview_id=None)
         interview = form.save(commit=False)
         interview.job_application = job_application  # Ensure the application is set
         interview.save()
+        return redirect('job_posting_detail', org_id=org_id, pk=job_id)
+
+    if request.method == 'POST' and 'delete_interview' in request.POST:
+        interview.delete()
         return redirect('job_posting_detail', org_id=org_id, pk=job_id)
 
     return render(request, 'jobs/manage_interview.html', {

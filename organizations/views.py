@@ -133,6 +133,26 @@ def organization_dashboard(request, org_id=None):
     return render(request, 'organizations/organization_dashboard.html', context)
 
 
+
+from django.http import JsonResponse
+from django.contrib.auth import get_user_model
+from organizations.models import Organization  # adjust if your app name is different
+
+User = get_user_model()
+
+def user_search(request):
+    query = request.GET.get('term', '')
+
+    # Get IDs of users who are organizations
+    org_user_ids = Organization.objects.values_list('user_id', flat=True)
+
+    # Filter users excluding those in the Organization table
+    users = User.objects.filter(username__icontains=query).exclude(id__in=org_user_ids)[:10]
+
+    results = [{'id': user.id, 'text': user.username} for user in users]
+    return JsonResponse({'results': results})
+
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -277,16 +297,7 @@ def organization_details_update(request):
 
 
 
-from django.http import JsonResponse
-from django.contrib.auth import get_user_model
 
-User = get_user_model()
-
-def user_search(request):
-    query = request.GET.get('term', '')
-    users = User.objects.filter(username__icontains=query)[:10]
-    results = [{'id': user.id, 'text': user.username} for user in users]
-    return JsonResponse({'results': results})
 
 
 
